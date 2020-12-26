@@ -37,6 +37,21 @@ cute_rabbit.hello();
 
 
 
+/*
+.. Functions are derived from Function.prototype
+.. and Function.prototype is derived from Object.prototype
+*/
+console.log(Object.getPrototypeOf(Function.prototype) == Object.prototype);
+//-> ture
+
+
+
+
+
+
+
+
+
 
 
 
