@@ -11,6 +11,7 @@ human.prototype.toString = function(){
   return "hello ..";
 }
 let reed = new human ;
+let joy = new human ;
 console.log(String(reed));
 //-> hello ..
 // here the String function uses an object's toString method
@@ -20,8 +21,13 @@ console.log(String(reed));
 
 
 
-
-
+/*
+.. simle use of symbols
+*/
+let sym = Symbol("hello");
+human.prototype[sym] = 55;
+console.log(reed[sym]);
+console.log(joy[sym])
 
 
 
