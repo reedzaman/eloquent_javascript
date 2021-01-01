@@ -58,6 +58,36 @@ console.log(obj[toStringSymbol]());
 //-> a new way ..
 
 
+console.log(Object.getOwnPropertyNames(Symbol));
+/*
+.. [
+   'length',       'name',
+   'prototype',    'for',
+   'keyFor',       'asyncIterator',
+   'hasInstance',  'isConcatSpreadable',
+   'iterator',     'match',
+   'matchAll',     'replace',
+   'search',       'species',
+   'split',        'toPrimitive',
+   'toStringTag',  'unscopables',
+   'asyncDispose', 'dispose',
+   'observable',   'patternMatch',
+   'replaceAll'
+.. ]
+*/
+console.log(Object.getPrototypeOf(Symbol) == Object.prototype);
+//-> false
+console.log(Object.getPrototypeOf(Symbol) == Function.prototype);
+//-> true
+console.log(Object.getPrototypeOf(Function.prototype) == Object.prototype);
+//-> true
+// Symbol <--- Function.prototype <--- Object.prototype
+
+
+
+
+
+
 
 
 
