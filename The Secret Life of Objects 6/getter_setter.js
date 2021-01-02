@@ -36,13 +36,16 @@ console.log(rnd_2.random);
 */
 class kg_pound{
   constructor(n){
-    this.weight = n;
+    this.kg = n;
   }
   get pound(){
-    return this.weight * 2.20462;
+    return this.kg * 2.20462;
   }
   set pound(n){
-    this.weight = n / 2.20462;
+    this.kg = n / 2.20462;
+  }
+  static from_pound(x){
+    return new kg_pound(x / 2.20462);
   }
 }
 let convert = new kg_pound(12);
@@ -51,11 +54,15 @@ console.log(convert.pound);
 
 // setting new value of pound
 convert.pound = 12;
-console.log(convert.weight)
+console.log(convert.kg)
 //-> 5.443114913227677
 
 
-
+let new_convert = kg_pound.from_pound(12);
+console.log(new_convert.pound)
+//-> 12
+console.log(new_convert.kg);
+//-> 5.443114913227677
 
 
 
