@@ -10,7 +10,7 @@
          [Symbol.iterator]: returns an iterable hook(object)
 */
 class matrix {
-  constructor (width, height, func) {
+  constructor (width, height, func = (x,y) => undefined) {
     this.width = width;
     this.height = height;
     this.container = [];
@@ -130,6 +130,21 @@ sym;
 //   ],
 //   __proto__: symatric_matrix { constructor: ƒ symatric_matrix(), set: ƒ set() }
 // }
+
+
+
+/*
+.. the 'instanceof' operator allows us to know whether a class inherits from another class
+   or not
+*/
+console.log(new symatric_matrix(2) instanceof matrix);
+//-> true
+console.log(new matrix(4,5) instanceof symatric_matrix);
+//-> false
+console.log([34,34] instanceof Array);
+//-> true
+
+
 
 
 
