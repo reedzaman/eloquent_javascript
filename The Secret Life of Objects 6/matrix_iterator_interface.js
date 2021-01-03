@@ -86,24 +86,67 @@ for ( let {value , done} of mat){
 //-> 'position 1 : 0'
 //-> 'position 0 : 1'
 //-> 'position 1 : 1'
-  
-  
-  
-  
 
+
+
+
+
+
+
+/*
+.. adding Inheritance
+*/
+class symatric_matrix extends matrix{
+  constructor(size, element = (x, y) => undefined ){
+    super(size, size, (x,y) => {
+      if( x < y ) return element(y, x);
+      else return element(x, y);
+    });
+  }
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+  set(x, y, value) {
+    super.set(x, y, value);
+    if (x != y) {
+      super.set(y, x, value);
+    }
+  }
+}
+
+let sym = new symatric_matrix( 5 , (x,y) => ` ${x}, ${y}`);
+sym;
+//-> symatric_matrix {
+//   width: 5,
+//   height: 5,
+//   container: [
+//     ' 0, 0', ' 1, 0', ' 2, 0',
+//     ' 3, 0', ' 4, 0', ' 1, 0',
+//     ' 1, 1', ' 2, 1', ' 3, 1',
+//     ' 4, 1', ' 2, 0', ' 2, 1',
+//     ' 2, 2', ' 3, 2', ' 4, 2',
+//     ' 3, 0', ' 3, 1', ' 3, 2',
+//     ' 3, 3', ' 4, 3', ' 4, 0',
+//     ' 4, 1', ' 4, 2', ' 4, 3',
+//     ' 4, 4'
+//   ],
+//   __proto__: symatric_matrix { constructor: ƒ symatric_matrix(), set: ƒ set() }
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 console.log('end of viewport..');
