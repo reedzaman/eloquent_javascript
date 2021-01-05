@@ -15,63 +15,36 @@ const roads = [
   'Shop-Town Hall',
 ];
 
+
 /*
-.. TAKES roads
-.. RETURNS an object with each place as property name
-   and an array of things that can be reached from that place
+.. RETURNS an object. each place as keys.
+   key values: every node possible going to from key(place)
 */
-function make_road_graph(data) {
+function make_road_graph(roads){
   let road_graph = Object.create(null);
-  function add(from, to) {
-    if (road_graph[from] == null) {
+  function add_edge(from, to){
+    if(road_graph[from] == null){
       road_graph[from] = [to];
-    } else {
+    }
+    else {
       road_graph[from].push(to);
     }
   }
-  for (let [from, to] of data.map((x) => x.split('-'))) {
-    add(from, to);
-    add(to, from);
-  }
+  roads.map(x => {
+    let [from, to] = x.split("-");
+    add_edge(from, to);
+    add_edge(to, from);
+  });
+  
   return road_graph;
 }
+
+
 
 let road_graph = make_road_graph(roads);
 
 
 
-class State {
-  constructor(place, parcels){
-    this.place = place;
-    this.parcels = parcels;
-  }
-  
-  move(destination){
-    if (!road_graph[this.place].includes(destination)) {
-      return this;
-    }
-    else {
-      let parcels = this.parcels.map (x => {
-        if(x.place != this.place) return x;
-        return {place: destination, address: x.address};
-      }).filter (x => x.place != x.address);
-      return new State(destination, parcels);
-    }
-  }
-}
-
-let first = new State(
-  "Post Office",
-  [{place: "Post Office", address: "Alice's House"}]
-);
-let next = first.move("Alice's House");
-
-console.log(next.place);
-//-> "Alice's House"
-console.log(next.parcels);
-//-> []
-console.log(first.place);
-//-> 'Post Office'
 
 
 
@@ -83,10 +56,4 @@ console.log(first.place);
 
 
 
-
-
-
-
-
-
-console.log('end of viewport..');
+console.log("end of viewport..");
