@@ -103,6 +103,42 @@ function run_robot(state, robot, memory) {
 
 
 
+/*
+.. chooses a random item from an array
+*/
+function pick_random(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+
+
+/*
+.. RETURNS a randomly generated parcel {place: random, address: random}
+*/
+function random_parcel() {
+  let pickup_place = pick_random(Object.keys(road_graph));
+  let dropping_place;
+  do{
+    dropping_place = pick_random(road_graph[pickup_place]);
+  } while(pickup_place == dropping_place);
+  return {place: pickup_place, address: dropping_place};
+}
+
+
+
+/*
+.. RETURNS a random village state starting from Post Office
+*/
+village_state.random = function(n = 10){
+  let parcels = [];
+  for(let i = 0; i < n; i++) {
+    parcels.push(random_parcel());
+  }
+  return new village_state("Post Office", parcels)
+}
+
+
+
 
 
 
