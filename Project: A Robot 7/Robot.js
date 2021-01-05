@@ -77,6 +77,35 @@ let memory = undefined;
 
 
 
+/*
+.. returns an array with a destination and a memory
+*/
+function robot(state, memory) {
+  return {destination: pick_random(road_graph[state.curr_location]), memory: memory};
+}
+
+
+
+/*
+.. turns on the robot to finish delivering parcels
+*/
+function run_robot(state, robot, memory) {
+  for(let turn = 0; ; turn++) {
+    if(state.parcels.length == 0) {
+      console.log(`Done in ${turn} turn(s)`);
+      break;
+    }
+    let best_move = robot(state, memory);
+    let new_state = state.move(best_move.direction);
+    console.log(`Moved to ${best_move.direction}`);
+  }
+}
+
+
+
+
+
+
 
 
 
