@@ -16,6 +16,14 @@ const roads = [
 ];
 
 
+
+let mail_route = [
+  "Alice's House", "Cabin", "Alice's House", "Bob's House",
+  "Town Hall", "Daria's House", "Ernie's House",
+  "Grete's House", "Shop", "Grete's House", "Farm",
+  "Marketplace", "Post Office"
+];
+
 /*
 .. RETURNS an object. each place as keys.
    key values: every node possible going to from key(place)
@@ -73,15 +81,12 @@ class village_state {
 
 
 
-let memory = undefined;
-
-
 
 /*
 .. returns an array with a destination and a memory
 */
 function robot(state, memory) {
-  return {destination: pick_random(road_graph[state.curr_location]), memory: memory};
+  return {direction: pick_random(road_graph[state.curr_location]), memory: memory};
 }
 
 
@@ -95,9 +100,10 @@ function run_robot(state, robot, memory) {
       console.log(`Done in ${turn} turn(s)`);
       break;
     }
-    let best_move = robot(state, memory);
-    let new_state = state.move(best_move.direction);
-    console.log(`Moved to ${best_move.direction}`);
+    let next_move = route_robot(state, memory);
+    state = state.move(next_move.direction);
+    memory = next_move.memory;
+    console.log(`Moved to ${next_move.direction}`);
   }
 }
 
@@ -136,6 +142,28 @@ village_state.random = function(n = 10){
   }
   return new village_state("Post Office", parcels)
 }
+
+
+
+/*
+.. Updated version of robot()
+   that doesn't just randomly gives next move destination
+   follows the mail_route
+*/
+function route_robot(state, memory) {
+  if(memory.length == 0){
+    memory = mail_route;
+  }
+  return {
+    direction: memory[0],
+    memory: memory.slice(1)
+  }
+}
+
+
+let state = village_state.random(10);
+
+run_robot(state, route_robot, mail_route);
 
 
 
