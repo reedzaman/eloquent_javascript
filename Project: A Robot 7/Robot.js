@@ -161,9 +161,23 @@ function route_robot(state, memory) {
 }
 
 
-let state = village_state.random(10);
 
-run_robot(state, route_robot, mail_route);
+
+/*
+.. finds a route
+*/
+function find_route(graph, from, to) {
+  let work = [{at: from, route: []}];
+  for (let i = 0; i < work.length; i++) {
+    let {at, route} = work[i];
+    for (let place of graph[at]) {
+      if (place == to) return route.concat(place);
+      if (!work.some(w => w.at == place)) {
+        work.push({at: place, route: route.concat(place)});
+      }
+    }
+  }
+}
 
 
 
