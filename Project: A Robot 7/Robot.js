@@ -49,6 +49,7 @@ function make_road_graph(roads){
 
 
 
+// creating the road connections dataset
 let road_graph = make_road_graph(roads);
 
 
@@ -164,19 +165,38 @@ function route_robot(state, memory) {
 
 
 /*
-.. finds a route
+.. TAKES a graph, two locations from and to
+.. RETURNS an array of nodes in a specific order representing the route
+	    from 'from' to 'to'
+	    null if no route is available
+.. It takes the starting node and checks if it's primary neighbor is the destination
+  or not. If not, it takes all of it neighbors and checks if one of 'their' neighbors
+  is the destination.
+.. It uses a 'visited' array to trace the already checked nodes, so that they won't have to be
+  checked more than once.
+.. It uses a "to be visited (tbv)" queue to keep track of what else to check next.
 */
-function find_route(graph, from, to) {
-  let work = [{at: from, route: []}];
-  for (let i = 0; i < work.length; i++) {
-    let {at, route} = work[i];
-    for (let place of graph[at]) {
-      if (place == to) return route.concat(place);
-      if (!work.some(w => w.at == place)) {
-        work.push({at: place, route: route.concat(place)});
+function find_route(graph, from, to){
+  if(from == to) return [to];
+  let visited = [];
+  let tbv = [];
+  tbv.push({name:from, route:[]});
+  
+  while(tbv.length != 0){
+    let item = tbv.shift();
+    visited.push(item.name);
+    for(let nei of graph[item.name]) {
+      if(nei == to) {
+        let route = item.route;
+        route.push(nei);
+        return route;
+      }
+      if( !tbv.some(x => x.name == nei) && !visited.includes(nei)) {
+        tbv.push({name:nei, route: item.route.concat(nei)});
       }
     }
   }
+  return null;
 }
 
 
