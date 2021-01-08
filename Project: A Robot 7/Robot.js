@@ -24,6 +24,8 @@ let mail_route = [
   "Marketplace", "Post Office"
 ];
 
+
+
 /*
 .. RETURNS an object. each place as keys.
    key values: every node possible going to from key(place)
@@ -50,7 +52,8 @@ function make_road_graph(roads){
 
 
 // creating the road connections dataset
-let road_graph = make_road_graph(roads);
+var road_graph = make_road_graph(roads);
+road_graph;
 
 
 
@@ -82,32 +85,16 @@ class village_state {
 
 
 
-
 /*
-.. returns an array with a destination and a memory
+.. RETURNS a random village state starting from Post Office
 */
-function robot(state, memory) {
-  return {direction: pick_random(road_graph[state.curr_location]), memory: memory};
-}
-
-
-
-/*
-.. turns on the robot to finish delivering parcels
-*/
-function run_robot(state, robot, memory) {
-  for(let turn = 0; ; turn++) {
-    if(state.parcels.length == 0) {
-      console.log(`Done in ${turn} turn(s)`);
-      break;
-    }
-    let next_move = route_robot(state, memory);
-    state = state.move(next_move.direction);
-    memory = next_move.memory;
-    console.log(`Moved to ${next_move.direction}`);
+village_state.random = function(n = 10){
+  let parcels = [];
+  for(let i = 0; i < n; i++) {
+    parcels.push(random_parcel());
   }
+  return new village_state("Post Office", parcels)
 }
-
 
 
 /*
@@ -134,14 +121,48 @@ function random_parcel() {
 
 
 /*
-.. RETURNS a random village state starting from Post Office
+.. TAKES a graph, two locations from and to
+.. RETURNS an array of nodes in a specific order representing the route
+	    from 'from' to 'to'
+	    null if no route is available
+.. It takes the starting node and checks if it's primary neighbor is the destination
+  or not. If not, it takes all of it neighbors and checks if one of 'their' neighbors
+  is the destination.
+.. It uses a 'visited' array to trace the already checked nodes, so that they won't have to be
+  checked more than once.
+.. It uses a "to be visited (tbv)" queue to keep track of what else to check next.
 */
-village_state.random = function(n = 10){
-  let parcels = [];
-  for(let i = 0; i < n; i++) {
-    parcels.push(random_parcel());
+function find_route(graph, from, to){
+  if(from == to) return [to];
+  let visited = [];
+  let tbv = [];
+  tbv.push({name:from, route:[]});
+  
+  while(tbv.length != 0){
+    let item = tbv.shift();
+    visited.push(item.name);
+    for(let nei of road_graph[item.name]) {
+      if(nei == to) {
+        let route = item.route;
+        route.push(nei);
+        return route;
+      }
+      if( !tbv.some(x => x.name == nei) && !visited.includes(nei)) {
+        tbv.push({name:nei, route: item.route.concat(nei)});
+      }
+    }
   }
-  return new village_state("Post Office", parcels)
+  return null;
+}
+
+
+
+/*
+.. returns an array with a destination and a memory
+.. for experimental purpose, not useful for final product
+*/
+function random_robot(state, memory) {
+  return {direction: pick_random(road_graph[state.curr_location]), memory: memory};
 }
 
 
@@ -163,82 +184,48 @@ function route_robot(state, memory) {
 
 
 
-
 /*
-.. TAKES a graph, two locations from and to
-.. RETURNS an array of nodes in a specific order representing the route
-	    from 'from' to 'to'
-	    null if no route is available
-.. It takes the starting node and checks if it's primary neighbor is the destination
-  or not. If not, it takes all of it neighbors and checks if one of 'their' neighbors
-  is the destination.
-.. It uses a 'visited' array to trace the already checked nodes, so that they won't have to be
-  checked more than once.
-.. It uses a "to be visited (tbv)" queue to keep track of what else to check next.
+.. The final 'robot' function that is going to direct the robot to 
+   various places
 */
-function find_route(graph, from, to){
-  if(from == to) return [to];
-  let visited = [];
-  let tbv = [];
-  tbv.push({name:from, route:[]});
-  
-  while(tbv.length != 0){
-    let item = tbv.shift();
-    visited.push(item.name);
-    for(let nei of graph[item.name]) {
-      if(nei == to) {
-        let route = item.route;
-        route.push(nei);
-        return route;
-      }
-      if( !tbv.some(x => x.name == nei) && !visited.includes(nei)) {
-        tbv.push({name:nei, route: item.route.concat(nei)});
-      }
+function shortest_path_robot({curr_location, parcels}, route) {
+  if(route.length == 0) {
+    let parcel = parcels[0];
+    if(parcel.place != curr_location) {
+      route = find_route(road_graph, curr_location , parcel.place);
+    }
+    else {
+      route = find_route(road_graph, curr_location, parcel.address);
     }
   }
-  return null;
+  return {direction: route[0], memory: route.slice(1)};
 }
 
 
 
 
-
-
-
 /*
-.. TAKES a graph
-.. RETURNS a data_set in the form of an object with every nodes and
-	    the route of every other nodes from it
-.. FORMAT:
-	{
-	  Alice's : [
-		      {place: Townhall, route: [shop, PostOffice, Townhall]},
-		      {place: Shop, route: [Shop]}
-		  ],
-	  Bob's : .....
-	}
+.. turns on the robot to finish delivering parcels
 */
-function find_all_routes(graph) {
-  let routes = {};
-  let places = Object.keys(graph);
-  for(let base_location of places) {
-    let other_places = places.filter(x => x != base_location);
-    for(let place of other_places) {
-      if(routes[base_location] == null) {
-        routes[base_location] = [{name: place, route: find_route(graph, base_location, place)}];
-      }
-      else {
-        routes[base_location].push({name: place, route: find_route(graph, base_location, place)});
-      }
+function run_robot(state, robot, memory) {
+  for(let turn = 0; ; turn++) {
+    if(state.parcels.length == 0) {
+      console.log(`Done in ${turn} turn(s)`);
+      break;
     }
+    let next_move = robot(state, memory);
+    state = state.move(next_move.direction);
+    memory = next_move.memory;
+    console.log(`Moved to ${next_move.direction}`);
   }
-  return routes;
 }
 
 
 
-// creating all routes that are possible going from a given location
-let all_routes = find_all_routes(road_graph);
+let random_state = village_state.random(20);
+run_robot(random_state, shortest_path_robot, []);
+//-> done in 21 turn(s)
+
 
 
 
