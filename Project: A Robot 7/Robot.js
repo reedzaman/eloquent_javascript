@@ -205,6 +205,47 @@ function find_route(graph, from, to){
 
 
 
+/*
+.. TAKES a graph
+.. RETURNS a data_set in the form of an object with every nodes and
+	    the route of every other nodes from it
+.. FORMAT:
+	{
+	  Alice's : [
+		      {place: Townhall, route: [shop, PostOffice, Townhall]},
+		      {place: Shop, route: [Shop]}
+		  ],
+	  Bob's : .....
+	}
+*/
+function find_all_routes(graph) {
+  let routes = {};
+  let places = Object.keys(graph);
+  for(let base_location of places) {
+    let other_places = places.filter(x => x != base_location);
+    for(let place of other_places) {
+      if(routes[base_location] == null) {
+        routes[base_location] = [{name: place, route: find_route(graph, base_location, place)}];
+      }
+      else {
+        routes[base_location].push({name: place, route: find_route(graph, base_location, place)});
+      }
+    }
+  }
+  return routes;
+}
+
+
+
+// creating all routes that are possible going from a given location
+let all_routes = find_all_routes(road_graph);
+
+
+
+
+
+
+
 
 
 
