@@ -157,7 +157,32 @@ function find_route(graph, from, to){
 
 
 
-
+/*
+.. TAKES a graph
+.. RETURNS an object of every node and it's distance from every
+   other node
+.. RETURNED OBJECT FORMAT: 
+   {
+    "Alice's House": {
+      "Bob's House": 1,
+      Cabin: 1,
+      ...
+    },
+    ...
+  }
+*/
+function build_distance_map(road_graph) {
+  let map = {};
+  let places = Object.keys(road_graph);
+  for(let elt of places){
+    map[elt] = {};
+    for (let element of places.filter(x => x != elt)) {
+      map[elt][element] = find_route(road_graph, elt, element).length;
+    }
+  }
+  return map;
+}
+let distance_map = build_distance_map(road_graph);
 
 
 
