@@ -158,6 +158,37 @@ function find_route(graph, from, to){
 
 
 /*
+.. exstracts some property with a given name ("name") from
+   all the elements of an array
+*/
+function extract(array, name) {
+  return array.map(x => x[name]);
+}
+
+
+
+/*
+.. TAKES an array
+.. RETURNS an array without duplicates
+*/
+function remove_duplicates(array) {
+  return [...new Set(array)];
+}
+
+
+
+/*
+.. TAKES two arrays
+.. RETURNS an array with elements of array2 excluding the ones
+   that are included in array1
+*/
+function make_exclusive(array1, array2) {
+  return array2.filter(x => !array1.includes(x));
+}
+
+
+
+/*
 .. TAKES a graph
 .. RETURNS an object of every node and it's distance from every
    other node
@@ -183,6 +214,7 @@ function build_distance_map(road_graph) {
   return map;
 }
 let distance_map = build_distance_map(road_graph);
+
 
 
 
@@ -248,11 +280,12 @@ function compare_robot(robot1, robot1_memory, robot2, robot2_memory) {
 
 
 
-compare_robot(route_robot, mail_route, shortest_path_robot, []);
-// { 
-//   robot1: '0.24 steps per parcel',
-//   robot2: '0.25 steps per parcel'
-// }
+
+
+
+
+
+
 
 
 
