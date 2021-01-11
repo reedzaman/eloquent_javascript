@@ -240,32 +240,6 @@ function closest(name, array) {
   return [min_name, array];
 }
 
-short_combination(["Farm","Cabin","Bob's House","Alice's House","Grete's House"]);
-
-
-function short_combination(place_array, start) {
-  let len = undefined;
-  let result = [];
-  let places = place_array;
-  if(start == undefined) {
-    result.push(places[0]);
-    curr_element = places[0];
-    places.shift();
-    len = places.length;
-  } else {
-    result.push(start);
-    curr_element = start;
-    len = place_array.length;
-  }
-  for(let i = 0; i < len; i++) {
-    ret = closest(curr_element, places);
-    curr_element = ret[0];
-    result.push(curr_element);
-    places = ret[1];
-  }
-  return result;
-}
-
 
 
 function route_robot(state, memory) {
@@ -297,16 +271,14 @@ function shortest_path_robot({curr_location, parcels}, route) {
 
 function advanced_robot({curr_location, parcels}, route) {
   if(route.length == 0) {
-    let pickup_places = remove_duplicates(extract(parcels, "place"));
-    let dropping_places = remove_duplicates(extract(parcels, "address"));
-    dropping_places = make_exclusive(pickup_places, dropping_places);
-    
-    let pickup_route = short_combination(pickup_places, curr_location);
-    let dropping_route = short_combination(dropping_places,pickup_places[pickup_places.length -1]);
-    route = pickup_route.concat(dropping_route);
-    route = remove_duplicates(route);
+    let pick = remove_duplicates(extract(parcels, "place"));
+    let drop = remove_duplicates(extract(parcels, "address"));
+    drop = make_exclusive(pick, drop);
+    route = pick.concat(drop);
   }
-  return {direction: route[0], memory: route.slice(1)};
+  let result = closest(curr_location, route);
+  
+  return {direction: result[0], memory: result[1]};
 }
 
 
@@ -330,11 +302,12 @@ function run_robot(state, robot, memory) {
 }
 
 function compare_robot(robot1, robot1_memory, robot2, robot2_memory, robot3, robot3_memory) {
-  let random_state = village_state.random(10000);
+  let random_state = village_state.random(100);
   
-  let robot1_avg = run_robot(random_state, robot1, robot1_memory) / 10000;
-  let robot2_avg = run_robot(random_state, robot2, robot2_memory) / 10000;
-  let robot3_avg = run_robot(random_state, robot3, robot3_memory) / 10000;
+  let robot1_avg = run_robot(random_state, robot1, robot1_memory) / 100;
+  let robot2_avg = run_robot(random_state, robot2, robot2_memory) / 100;
+  let robot3_avg = run_robot(random_state, robot3, robot3_memory) / 100;
+  
   
   return {
     robot1: `${robot1_avg} steps per parcel`,
@@ -356,22 +329,6 @@ compare_robot(route_robot, mail_route, shortest_path_robot, [], advanced_robot, 
 //   robot2: '0.0028 steps per parcel',
 //   robot3: '0.002 steps per parcel'
 // }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
