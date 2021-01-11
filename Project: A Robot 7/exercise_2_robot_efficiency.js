@@ -15,7 +15,7 @@ const roads = [
   'Shop-Town Hall',
 ];
 
-
+// ["Cabin","Bob's House","Alice's House","Grete's House"]
 
 let mail_route = [
   "Alice's House", "Cabin", "Alice's House", "Bob's House",
@@ -187,6 +187,13 @@ function make_exclusive(array1, array2) {
 }
 
 
+/*
+.. removes a given item from an array
+*/
+function remove(array, item) {
+  return array.filter(x => x!==item);
+}
+
 
 /*
 .. TAKES a graph
@@ -217,6 +224,49 @@ let distance_map = build_distance_map(road_graph);
 
 
 
+function closest(name, array) {
+  
+  let min_name = name;
+  let min_value = Infinity;
+  
+  for(let i = 0; i < array.length; i++) {
+    let curr_value = distance_map[name][array[i]];
+    if(curr_value < min_value){
+      min_value = curr_value;
+      min_name = array[i];
+    }
+  }
+  array = remove(array, min_name);
+  return [min_name, array];
+}
+
+short_combination(["Farm","Cabin","Bob's House","Alice's House","Grete's House"]);
+
+
+function short_combination(place_array, start) {
+  let len = undefined;
+  let result = [];
+  let places = place_array;
+  if(start == undefined) {
+    result.push(places[0]);
+    curr_element = places[0];
+    places.shift();
+    len = places.length;
+  } else {
+    result.push(start);
+    curr_element = start;
+    len = place_array.length;
+  }
+  for(let i = 0; i < len; i++) {
+    ret = closest(curr_element, places);
+    curr_element = ret[0];
+    result.push(curr_element);
+    places = ret[1];
+  }
+  return result;
+}
+
+
 
 function route_robot(state, memory) {
   if(memory.length == 0){
@@ -245,6 +295,21 @@ function shortest_path_robot({curr_location, parcels}, route) {
 
 
 
+function advanced_robot({curr_location, parcels}, route) {
+  if(route.length == 0) {
+    let pickup_places = remove_duplicates(extract(parcels, "place"));
+    let dropping_places = remove_duplicates(extract(parcels, "address"));
+    dropping_places = make_exclusive(pickup_places, dropping_places);
+    
+    let pickup_route = short_combination(pickup_places, curr_location);
+    let dropping_route = short_combination(dropping_places,pickup_places[pickup_places.length -1]);
+    route = pickup_route.concat(dropping_route);
+    route = remove_duplicates(route);
+  }
+  return {direction: route[0], memory: route.slice(1)};
+}
+
+
 
 /*
 .. turns on the robot to finish delivering parcels
@@ -264,22 +329,33 @@ function run_robot(state, robot, memory) {
   return turn;
 }
 
-
-
-function compare_robot(robot1, robot1_memory, robot2, robot2_memory) {
-  let random_state = village_state.random(100);
+function compare_robot(robot1, robot1_memory, robot2, robot2_memory, robot3, robot3_memory) {
+  let random_state = village_state.random(10000);
   
-  let robot1_avg = run_robot(random_state, robot1, robot1_memory) / 100;
-  let robot2_avg = run_robot(random_state, robot2, robot2_memory) / 100;
+  let robot1_avg = run_robot(random_state, robot1, robot1_memory) / 10000;
+  let robot2_avg = run_robot(random_state, robot2, robot2_memory) / 10000;
+  let robot3_avg = run_robot(random_state, robot3, robot3_memory) / 10000;
   
   return {
     robot1: `${robot1_avg} steps per parcel`,
-    robot2: `${robot2_avg} steps per parcel`
+    robot2: `${robot2_avg} steps per parcel`,
+    robot3: `${robot3_avg} steps per parcel`
   } ;
 }
 
 
 
+
+
+
+
+
+compare_robot(route_robot, mail_route, shortest_path_robot, [], advanced_robot, []);
+// {
+//   robot1: '0.0024 steps per parcel',
+//   robot2: '0.0028 steps per parcel',
+//   robot3: '0.002 steps per parcel'
+// }
 
 
 
