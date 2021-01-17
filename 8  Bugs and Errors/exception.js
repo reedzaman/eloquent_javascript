@@ -28,6 +28,25 @@ console.log(accounts);
 
 
 
+/*
+.. a much good version of the banking code
+.. the use of 'finally'
+*/
+function transfer(from, amount) {
+  if (accounts[from] < amount) return ;
+  let progress = 0;
+  try {
+    accounts[from] -= amount;
+    progress = 1;
+    accounts[get_account()] += amount;
+    progress = 2;
+  } finally {
+    if(progress == 1) {
+      accounts[from] += amount;
+    }
+  }
+}
+
 
 
 
