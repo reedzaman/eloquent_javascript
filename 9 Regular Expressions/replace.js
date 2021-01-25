@@ -55,6 +55,36 @@ console.log("The un and the fao".replace(/(un|fau)/g, x => x.toUpperCase()));
 
 
 
+/*
+.. an example program
+*/
+
+let items = "10 Pen, 5 Notebooks, 2 Highlighters";
+
+function take_a_set_of_item(first_match, amount, unit) {
+  amount = Number(amount) -1;
+  if(amount == 1) {
+    unit = unit.slice(0, unit.length -1) 
+  } else if(amount == 0) {
+    amount = "no";
+  }
+  
+  return amount + " " + unit;
+}
+
+
+console.log(items);
+// '10 Pen, 5 Notebooks, 2 Highlighters'
+
+items = items.replace(/(\d+) (\w+)/g, take_a_set_of_item);
+console.log(items);
+// '9 Pen, 4 Notebooks, 1 Highlighter'
+
+items = items.replace(/(\d+) (\w+)/g, take_a_set_of_item);
+console.log(items);
+// '8 Pen, 3 Notebooks, no Highlighter'
+
+
 
 
 console.log("end of viewport..");
