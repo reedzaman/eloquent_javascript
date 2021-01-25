@@ -15,6 +15,18 @@ console.log("01a10110b01c01".replace(/[\D]+/g, ""));
 
 
 
+/*
+.. Caught groups can be refered as $'matched group number'
+   e.g. $1 means the first caught group
+        $2 means the second caught group
+        $& means the whole match
+   .. upto $9 can be refered
+*/
+console.log("Abara Ka Dabara".replace(/(\w+) (\w+) (\w+)/, "$3 $2 $1"));
+//-> 'Dabara Ka Abara'
+
+
+
 
 
 
