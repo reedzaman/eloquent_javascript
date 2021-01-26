@@ -24,6 +24,25 @@ console.log(pattern.lastIndex);
 
 
 
+/*
+.. The sticky (y) option looks for a match right at the lastIndex
+.. Whereas global (g) option looks for a match after the lastIndex
+*/
+let global = /abc/g;
+console.log(global.exec("xyz abc"));
+//-> [ 'abc', index: 4, input: 'xyz abc', groups: undefined ]
+let sticky = /abc/y;
+console.log(sticky.exec("xyz abc"));
+//-> null
+
+sticky.lastIndex = 4;
+console.log(sticky.exec("xyz abc"));
+//-> [ 'abc', index: 4, input: 'xyz abc', groups: undefined ]
+
+
+
+
+
 
 
 
