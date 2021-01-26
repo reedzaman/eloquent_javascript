@@ -72,6 +72,21 @@ console.log("here is the one after the colon: 1 and another 1".match(/1/g));
 
 
 
+/*
+.. A really cool way of looping over matches
+*/
+let regex = /\b\d+\b/g;
+let text = "This text has 3 numbers in it 12 and, 14";
+let match;
+while(match = regex.exec(text)) {
+  console.log("found number " , match[0] , " at the position " , match.index);
+}
+// 'found number ' '3' ' at the position ' 14
+// 'found number ' '12' ' at the position ' 30
+// 'found number ' '14' ' at the position ' 38
+
+
+
 
 
 
