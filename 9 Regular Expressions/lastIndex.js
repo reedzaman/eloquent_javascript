@@ -42,6 +42,36 @@ console.log(sticky.exec("xyz abc"));
 
 
 
+/*
+.. There are some problems with global option of a regular expression
+   when exec is called the function call leaves lastIndex at a certain point
+.. So, the next time 'exec' is called with a different argument it fails to do
+   the job properly
+*/
+let find_one = /1/g;
+console.log(find_one.exec("here is the one after the colon: 1"));
+//-> ['1', index: 33, ..]
+console.log(find_one.exec("now again one here: 1"));
+//-> null
+
+
+
+
+/*
+.. Global option in a regular expression also changes the way 'match' method of
+   strings behaves.
+.. If called normally it returns an object indentical to object returned by 
+   'exec'
+   But when called with 'global' it returns an array containing all the matched
+   pairs.
+*/
+console.log("here is the one after the colon: 1 and another 1".match(/1/));
+//-> ['1', index: 33, ..]
+console.log("here is the one after the colon: 1 and another 1".match(/1/g));
+//-> ['1', '1']
+
+
+
 
 
 
