@@ -20,6 +20,19 @@ for(let element of names) {
 
 
 
+/*
+.. Strings have a 'search' method which expects a regular expression as argument
+   Returns the index of the found match. 
+   Returns -1 if not found
+*/
+console.log("Hello World".search(/world/i));
+//-> 6
+console.log("  ".search(/world/i));
+//-> -1
+
+
+
+
 
 
 
