@@ -23,13 +23,28 @@ function parse_INI(INI) {
       section[match[1]] = match[2];
     } else if(match = line.match(/^\[(\w+)\]$/)) {
       section = result[match[1]] = {};
+    } else if(!(/^\s*(;.*)?$/.test(line))) {
+      throw new Error("Invalid line found!");
     }
   });
   return result;
 }
 
 parse_INI(INI);
-
+// {
+//   searchengine: 'https://duckduckgo.com/?q=$1',
+//   spitefulness: '9.7',
+//   Dipu: {
+//     fullname: 'Dipu Ahmed',
+//     type: 'Underground debt collector',
+//     website: 'http://545.879.574.6/jhLYy5uyojferowjf/info'
+//   },
+//   Joy: {
+//     fullname: 'Avijit Dey Joy',
+//     type: 'evil scientist',
+//     outputdir: '/home/reed/enemies/joy'
+//   }
+// }
 
 
 
