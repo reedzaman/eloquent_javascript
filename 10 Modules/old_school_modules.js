@@ -6,9 +6,9 @@ const week_days = function() {
   };
 }();
 
-week_days.name(5);
+console.log(week_days.name(5));
 //-> Friday
-week_days.number("Friday");
+console.log(week_days.number("Friday"));
 //-> 5
 
 
