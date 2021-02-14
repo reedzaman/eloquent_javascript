@@ -23,3 +23,19 @@ for(let i = 0; i < 5; i++) {
 // 37425
 // 34535
 // 58834
+
+
+
+/*
+for(let elt of randomGiver){
+  console.log(elt);
+}
+*/
+
+
+
+
+
+
+
+
