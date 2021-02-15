@@ -31,6 +31,34 @@ for(let elt of randomGiver){
   console.log(elt);
 }
 */
+//65598
+//48989
+//32013
+// ...
+
+
+
+
+
+
+function* powerSeries(n, p) {
+	let base = n;
+	while(true) {
+		yield Math.pow(base, p);
+    base++;
+	}
+}
+
+let power = powerSeries(3, 2);
+
+console.log(power.next().value);
+//-> 9
+console.log(power.next().value);
+//-> 16
+console.log(power.next().value);
+//-> 25
+console.log(power.next().value);
+//-> 36
 
 
 
@@ -38,4 +66,4 @@ for(let elt of randomGiver){
 
 
 
-
+console.log("end of viewport..");
